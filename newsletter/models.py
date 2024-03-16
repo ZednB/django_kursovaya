@@ -2,6 +2,8 @@ from django.db import models
 
 from client.models import Client
 
+NULLABLE = {'blank': True, 'null': True}
+
 
 class NewsLetter(models.Model):
 
@@ -42,3 +44,18 @@ class Message(models.Model):
     class Meta:
         verbose_name = 'Сообщение'
         verbose_name_plural = 'Сообщения'
+
+
+class Log(models.Model):
+
+    mailing_list = models.ForeignKey(NewsLetter, on_delete=models.CASCADE, verbose_name='Рассылка')
+    date_time = models.DateTimeField(auto_now_add=True, verbose_name='Дата и время рассылки')
+    status_try = models.CharField(max_length=100, verbose_name='Статус попытки')
+    response = models.TextField(**NULLABLE, verbose_name='Ответ сервера')
+
+    def __str__(self):
+        return f"{self.mailing_list} - {self.date_time}"
+
+    class Meta:
+        verbose_name = 'Лог'
+        verbose_name_plural = 'Логи'
